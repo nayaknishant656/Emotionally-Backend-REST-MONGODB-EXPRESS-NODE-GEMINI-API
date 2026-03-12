@@ -23,7 +23,8 @@ const journalSchema = new mongoose.Schema(
     {
         timestamps: true,
         versionKey: false,
-        collection: 'Journal'
+        collection: 'Journal',
+        bufferTimeoutMS: 20000
     }
 );
 
