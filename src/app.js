@@ -33,7 +33,6 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 const mongoose = require('mongoose');
-const connectDB = require('./config/db');
 
 // ──────────────────────────────────────────────
 // 3. Routes
@@ -80,44 +79,4 @@ app.use((req, res) => {
 // ──────────────────────────────────────────────
 app.use(errorHandler);
 
-/**
- * Server Startup Logic
- * Priority 1: Establish MongoDB connection
- * Priority 2: Start Express server listening
- */
-const startServer = async () => {
-    try {
-        // 1. Priority: Connect to MongoDB
-        await connectDB();
-
-        // 2. Start listening only after DB is ready
-        const server = app.listen(config.port, () => {
-            console.log(`\n🚀 Server running in ${config.nodeEnv} mode on port ${config.port}`);
-            console.log(`📡 Health check  → http://localhost:${config.port}/health`);
-            console.log(`📦 API base URL  → http://localhost:${config.port}/api/v1\n`);
-        });
-
-        // Handle process signals for graceful shutdown
-        const shutdown = (signal) => {
-            console.log(`\n${signal} received. Shutting down gracefully...`);
-            server.close(() => {
-                console.log('💤 Server closed.');
-                process.exit(0);
-            });
-        };
-
-        process.on('SIGTERM', () => shutdown('SIGTERM'));
-        process.on('SIGINT', () => shutdown('SIGINT'));
-
-        process.on('unhandledRejection', (err) => {
-            console.error('❌ Unhandled Rejection:', err.message);
-            server.close(() => process.exit(1));
-        });
-
-    } catch (error) {
-        console.error('❌ Failed to start server:', error.message);
-        process.exit(1);
-    }
-};
-
-module.exports = { app, startServer };
+module.exports = app;
