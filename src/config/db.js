@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const config = require('./index');
 
 /**
  * Connect to MongoDB Atlas using Mongoose.
@@ -6,7 +7,8 @@ const mongoose = require('mongoose');
  */
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+    console.log('⏳ Connecting to MongoDB...');
+    const conn = await mongoose.connect(config.mongodbUri, {
       serverSelectionTimeoutMS: 20000,
     });
 

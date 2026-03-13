@@ -32,9 +32,24 @@ app.use(morgan(config.nodeEnv === 'production' ? 'combined' : 'dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+const mongoose = require('mongoose');
+
 // ──────────────────────────────────────────────
-// 3. Health Check
+// 3. Routes
 // ──────────────────────────────────────────────
+
+// Homepage / Root Route
+app.get('/', (req, res) => {
+    const dbStatus = mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected';
+    console.log(`🏠 Homepage accessed. MongoDB Status: ${dbStatus}`);
+    res.status(200).json({
+        success: true,
+        message: 'Welcome to Emotionally API 🧘‍♂️',
+        mongodb: dbStatus
+    });
+});
+
+// Health Check
 app.get('/health', (req, res) => {
     res.status(200).json({
         success: true,
