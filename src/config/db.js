@@ -1,35 +1,12 @@
 const mongoose = require('mongoose');
-const config = require('./index');
 
-/**
- * Connect to MongoDB Atlas using Mongoose.
- * Handles connection events and retries on failure.
- */
 const connectDB = async () => {
   try {
-    console.log('⏳ Connecting to MongoDB...');
-    const conn = await mongoose.connect(config.mongodbUri, {
-      serverSelectionTimeoutMS: 20000,
-    });
-
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-
-    // Connection event listeners
-    mongoose.connection.on('error', (err) => {
-      console.error(`❌ MongoDB connection error: ${err.message}`);
-    });
-
-    mongoose.connection.on('disconnected', () => {
-      console.warn('⚠️  MongoDB disconnected. Attempting to reconnect...');
-    });
-
-    mongoose.connection.on('reconnected', () => {
-      console.log('🔄 MongoDB reconnected successfully.');
-    });
-
-    return conn;
+    const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://mobideas2:nishantnayak2297@cluster0.05pqoma.mongodb.net/Emotionally';
+    const conn = await mongoose.connect(mongoURI);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error(`❌ MongoDB connection failed: ${error.message}`);
+    console.error(`Error: ${error.message}`);
     process.exit(1);
   }
 };
