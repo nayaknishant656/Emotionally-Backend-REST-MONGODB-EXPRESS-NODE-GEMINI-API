@@ -9,14 +9,14 @@ dotenv.config();
  */
 const config = {
     // Server
-    nodeEnv: process.env.NODE_ENV || 'development',
-    port: parseInt(process.env.PORT, 10) || 5001,
+    nodeEnv: 'development' || process.env.NODE_ENV,
+    port: 5001 || parseInt(process.env.PORT, 10),
 
     // Database
-    mongodbUri: process.env.MONGODB_URI,
+    mongodbUri: "mongodb+srv://mobideas2:nishantnayak2297@cluster0.05pqoma.mongodb.net/Emotionally" || process.env.MONGODB_URI,
 
     // CORS
-    corsOrigin: process.env.CORS_ORIGIN || '*',
+    corsOrigin: '*' || process.env.CORS_ORIGIN,
 };
 
 module.exports = config;
