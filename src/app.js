@@ -18,6 +18,23 @@ const { errorHandler } = require('./middlewares');
  * - Global error handler
  */
 const app = express();
+const connectDB = require('./config/db');
+
+// ──────────────────────────────────────────────
+// 0. Ensure Database Connection (Vercel/Serverless Support)
+// ──────────────────────────────────────────────
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Database connection failed',
+            error: error.message
+        });
+    }
+});
 
 // ──────────────────────────────────────────────
 // 1. Security & Utility Middleware
